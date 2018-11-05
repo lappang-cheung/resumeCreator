@@ -3,6 +3,10 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 
+// Custom routes
+const users = require('./routes/api/users')
+const profile = require('./routes/api/profile')
+
 // Custom variables
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -12,8 +16,12 @@ const keys = require('./config/keys')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
+// Default route
+app.get("/", (req, res) => res.send("Hello world"))
+
 // Routes
-app.get('/', async (req, res) => res.send("Hello"))
+app.use('/api/users', users)
+app.use('/api/profile', profile)
 
 // Connecting to DB and setting port
 app.listen(PORT, async() => {
