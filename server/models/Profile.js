@@ -60,6 +60,41 @@ const ProfileSchema = new Schema({
             }
         }
     ],
+    project: [
+        {
+            title: {
+                type: String,
+                required: true
+            },
+            company: {
+                type: String
+            },
+            from: {
+                type: Date,
+                required: true
+            },
+            to: {
+                type: String
+            },
+            current: {
+                type: Boolean,
+                default: false
+            },
+            description: {
+                type: String
+            },
+            repo: {
+                type: String
+            },
+            demo: {
+                type: String
+            },
+            completed:{
+                type: Boolean,
+                default: false
+            }
+        }
+    ],
     education: [
         {
             school: {
