@@ -1,9 +1,12 @@
 // Required modules
 const router = require('express').Router()
 const jwt = require('jsonwebtoken')
+const passport = require('passport')
+
 // Custom modules
 const helpers = require('../../util/helpers')
 const keys = require('../../config/keys')
+
 // Load the model
 const User = require('../../models/User')
 
@@ -80,6 +83,22 @@ router.post('/login', async(req, res) => {
             return res.status(400).json({ password: 'Password is incorrect'})
         }
     }
+})
+
+// @route   GET API route
+// @desc    Current user route
+// @access  Private
+router.get('/currentUser', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+    const { id, firstName, lastName, avatar, email } = req.user
+
+    res.json({
+        id,
+        firstName,
+        lastName,
+        avatar,
+        email
+    })
 })
 
 // Export the route

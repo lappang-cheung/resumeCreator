@@ -2,6 +2,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const passport = require('passport')
 
 // Custom routes
 const users = require('./routes/api/users')
@@ -22,6 +23,10 @@ app.get("/", (req, res) => res.send("Hello world"))
 // Routes
 app.use('/api/users', users)
 app.use('/api/profile', profile)
+
+// Passport Middleware & Config
+app.use(passport.initialize())
+require('./config/passport')(passport)
 
 // Connecting to DB and setting port
 app.listen(PORT, async() => {
