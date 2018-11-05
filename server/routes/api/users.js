@@ -12,6 +12,7 @@ const User = require('../../models/User')
 
 // Load validations
 const validateRegisterInput = require('../../validation/register')
+const validateLoginInput = require('../../validation/login')
 
 // @route   Get API route
 // @desc    Test user route
@@ -57,14 +58,21 @@ router.post('/register', async(req, res) => {
 // @desc    Login user route
 // @access  Public
 router.post('/login', async(req, res) => {
+    // Destructing login validation
+    const { errors, isValid } = validateLoginInput(req.body)
+    // Check validation
+    if(!isValid){
+        return res.status(400).json(errors)
+    }
     // Destructing for email and password from the body
     const { email, password } = req.body
     // Store the state of the user
     const user = await User.findOne({ email })
     // Check if user email exist
     if(!user){
+        errors.email = 'Email not found'
         // Return 404 if the email does not exist
-        return res.status(404).json({ email: 'Email not found'})
+        return res.status(404).json({ errors })
     }else{
         // Create the hash password and compare the hash password
         if(helpers.hash(password) === user.password){
