@@ -10,6 +10,9 @@ const keys = require('../../config/keys')
 // Load the model
 const User = require('../../models/User')
 
+// Load validations
+const validateRegisterInput = require('../../validation/register')
+
 // @route   Get API route
 // @desc    Test user route
 // @access  Public
@@ -21,12 +24,19 @@ router.get('/test', async(req, res, next) => {
 // @desc    Create user route
 // @access  Public
 router.post('/register', async(req, res) => {
+    // Destrucuting register validation
+    const { errors, isValid } = validateRegisterInput(req.body)
+    // Check validation
+    if(!isValid){
+        return res.status(400).json(errors)
+    }
     // Store the state of the user
     const user = await User.findOne({ email: req.body.email })
     // Check if the user email already exist
     if(user){
+        errors.email = 'Email already exist'
         // Return 400 if email already exist
-        return res.status(400).json({ email: 'Email already exist'})
+        return res.status(400).json({ errors })
     }else{
         // Create new user object
         const newUser = new User({
