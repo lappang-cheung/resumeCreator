@@ -7,6 +7,9 @@ const passport = require('passport')
 const Profile = require('../../models/Profile')
 const User = require('../../models/User')
 
+// Load validation
+const validateProfileInput = require('../../validation/profile')
+
 // @route   Get API route
 // @desc    Test profile route
 // @access  Public
@@ -33,7 +36,14 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
 // @route   Post API route
 // @desc    Create/Update user profile route
 // @access  Private
-router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.post('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+
+    const { errors, isValid } = validateProfileInput(req.body)
+    // Check validation
+    if(!isValid){
+        // Return any errors with 400 status
+        return res.status(400).json(errors)
+    }
 
     const profileFields = {}
     profileFields.user = req.user.id
@@ -61,7 +71,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
     if(req.body.dribble) profileFields.social.dribble = req.body.dribble
     if(req.body.behance) profileFields.social.behance = req.body.behance
 
-    const profile = Profile.findOne({ user: req.user.id })
+    const profile = await Profile.findOne({ user: req.user.id })
 
     if(profile){
         // Update
