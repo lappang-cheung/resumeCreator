@@ -9,6 +9,7 @@ const User = require('../../models/User')
 
 // Load validation
 const validateProfileInput = require('../../validation/profile')
+const validateExperienceInput = require('../../validation/experience')
 
 // @route   Get API route
 // @desc    Test profile route
@@ -30,6 +31,38 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
         return res.status(404).json(errors)
     }else{
         return res.status(200).json(profile)
+    }
+})
+
+// @route   Post API route
+// @desc    Get profile by handle
+// @access  Public
+router.get('/handle/:handle', async (req, res) => {
+
+    const errors = {}
+
+    const profile = await Profile.findOne({ handle: req.params.handle}).populate('user', ['firstName','lastName', 'avatar'])
+    if(!profile){
+        errors.noprofile = 'There is no profile for this user'
+        return res.status(404).json(errors)
+    }else{
+        return res.json(profile)
+    }
+})
+
+// @route   Post API route
+// @desc    Get profile by userid
+// @access  Public
+router.get('/user/:user_id', async (req, res) => {
+
+    const errors = {}
+
+    const profile = await Profile.findOne({ handle: req.params.user_id}).populate('user', ['firstName','lastName', 'avatar'])
+    if(!profile){
+        errors.noprofile = 'There is no profile for this user'
+        return res.status(404).json(errors)
+    }else{
+        return res.json(profile)
     }
 })
 
@@ -97,6 +130,39 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req, r
                     .save()
                     .then(profile => res.json(profile))
             })
+    }
+})
+
+// @route   Post API route
+// @desc    Add experience to profile route
+// @access  Private
+router.post('/experience', passport.authenticate('jwt', {session: false}), async(req, res) => {
+
+    const { errors, isValid } = validateExperienceInput(req.body)
+    // Check validation
+    if(!isValid){
+        // Return any errors with 400 status
+        return res.status(400).json(errors)
+    }
+
+    const profile = await Profile.findOne({ user: req.user.id })
+
+    if(profile){
+
+        const newExp = {
+            title: req.body.title,
+            company: req.body.company,
+            location: req.body.location,
+            from: req.body.from,
+            to: req.body.to,
+            current: req.body.current,
+            description: req.body.description
+        }
+
+        // Add to experience array
+        profile.experience.unshift(newExp)
+        profile.save()
+            .then(profile => res.json(profile))
     }
 })
 
