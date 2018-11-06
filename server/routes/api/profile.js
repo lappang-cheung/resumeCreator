@@ -24,7 +24,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
 
     const errors = {}
 
-    const profile = await Profile.findOne({ user: req.user.id })
+    const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['firstName', 'lastName', 'avatar'])
     if(!profile){
         errors.noprofile = 'There no profile for this user'
         return res.status(404).json(errors)
