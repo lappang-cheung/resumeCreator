@@ -138,13 +138,16 @@ const ProfileSchema = new Schema({
         github: {
             type: String
         },
-        twitter: {
-            type: String
-        },
         instagram: {
             type: String
         },
         facebook: {
+            type: String
+        },
+        dribble: {
+            type: String
+        },
+        behance: {
             type: String
         }
     },
