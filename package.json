@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "server-install": "yarn install",
+    "client-install": "cd client & yarn install",
     "server": "nodemon lib/server.js",
+    "client": "cd client && yarn start",
     "sass": "node-sass -w client/static/scss/ -o client/static/styles/ --recursive"
   },
   "repository": {
