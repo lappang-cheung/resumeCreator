@@ -11,6 +11,24 @@ class Register extends Component {
         errors: {} 
     }
 
+    onChange = event => {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+    }
+
+    onSubmit = event => {
+        event.preventDefault()
+
+        const {firstName, lastName, email, password, password2 } = this.state
+
+        const newUser = {
+            firstName, lastName, email, password, password2
+        }
+
+        console.log(newUser)
+    }
+
     render() {
         return (
             <div className="register">
@@ -19,14 +37,15 @@ class Register extends Component {
                         <div className="col-md-8 m-auto">
                             <h1 className="display-4 text-center">Sign Up</h1>
                             <p className="lead text-center">Create your DevConnector account</p>
-                            <form action="create-profile.html">
+                            <form onSubmit={this.onSubmit}>
                                 <div className="form-group">
                                     <input 
                                         type="text" 
                                         className="form-control form-control-lg" 
                                         placeholder="First name" 
                                         name="firstName"
-                                        value={this.state.firstName} 
+                                        value={this.state.firstName}
+                                        onChange={this.onChange} 
                                     />
                                 </div>
                                 <div className="form-group">
@@ -36,6 +55,7 @@ class Register extends Component {
                                         placeholder="Last name" 
                                         name="lastName"
                                         value={this.state.lastName} 
+                                        onChange={this.onChange} 
                                     />
                                 </div>
                                 <div className="form-group">
@@ -45,6 +65,7 @@ class Register extends Component {
                                         placeholder="Email Address" 
                                         name="email" 
                                         value={this.state.email}
+                                        onChange={this.onChange} 
                                     />
                                 </div>
                                 <div className="form-group">
@@ -54,6 +75,7 @@ class Register extends Component {
                                         placeholder="Password" 
                                         name="password" 
                                         value={this.state.password}
+                                        onChange={this.onChange} 
                                     />
                                 </div>
                                 <div className="form-group">
@@ -63,6 +85,7 @@ class Register extends Component {
                                         placeholder="Confirm Password" 
                                         name="password2" 
                                         value={this.state.password2}
+                                        onChange={this.onChange} 
                                     />
                                 </div>
                                     <input type="submit" className="btn btn-info btn-block mt-4" />
